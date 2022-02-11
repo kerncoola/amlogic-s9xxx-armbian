@@ -2,41 +2,40 @@
 
 View Chinese description  |  [查看中文说明](README.cn.md)
 
-Compile a custom kernel as needed. This kernel can be used in [Armbian](https://github.com/ophub/amlogic-s9xxx-armbian) and [OpenWrt](https://github.com/ophub/amlogic-s9xxx-openwrt) systems. Commonly used in systems made with the [flippy](https://github.com/unifreq/openwrt_packit) standard.
+Compile a custom kernel as needed. This kernel can be used in [Armbian](https://github.com/ophub/amlogic-s9xxx-armbian) and [OpenWrt](https://github.com/ophub/amlogic-s9xxx-openwrt) systems. Commonly used in systems made with the [unifreq](https://github.com/unifreq/openwrt_packit) standard.
 
-## Compile command description
+## Local compile command description
 
 | Parameter | Meaning | Description |
 | ---- | ---- | ---- |
 | -d | Defaults | Compile all kernels with default configuration. |
-| -k | Kernel | Specify [kernel](https://cdn.kernel.org/pub/linux/kernel/v5.x/) name, such as `-k 5.4.160`. Multiple kernels use `_` to connect, such as `- k 5.10.80_5.4.160` |
-| -a | AutoKernel | Set whether to automatically adopt the latest version of the kernel of the same series. When it is `true`, it will automatically find whether there is a newer version of the kernel specified in `-k` such as `5.4.160` of the `5.4` series. If there is the latest version after `5.4.160`, it will be automatically replaced with the latest version . When set to `false`, the specified version of the kernel will be compiled. Default value: `true` |
-| -n | CustomName | Set the kernel custom signature. The default value is `-meson64-beta` and the generated kernel is `5.4.160-meson64-beta`. Do not include spaces when setting a custom signature. |
-| -r | Repo | Specify the download site of the kernel compilation source code. The available options are [kernel.org](https://www.kernel.org/) and [flippy](https://github.com/unifreq), the default is `flippy` |
+| -k | Kernel | Specify [kernel](https://cdn.kernel.org/pub/linux/kernel/v5.x/) name, such as `-k 5.4.170`. Multiple kernels use `_` to connect, such as `- k 5.10.90_5.4.170` |
+| -a | AutoKernel | Set whether to automatically adopt the latest version of the kernel of the same series. When it is `true`, it will automatically find whether there is a newer version of the kernel specified in `-k` such as `5.4.170` of the `5.4` series. If there is the latest version after `5.4.170`, it will be automatically replaced with the latest version . When set to `false`, the specified version of the kernel will be compiled. Default value: `true` |
+| -n | CustomName | Set the kernel custom signature. The default value is `-meson64-dev` and the generated kernel is `5.4.170-meson64-dev`. Do not include spaces when setting a custom signature. |
+| -r | Repo | Specifies the source code repository for the compiled kernel. Defaults to `unifreq` . You can choose the source code of `kernel.org` and the kernel source of `github.com` code repository. For example `-r kernel.org` or `-r unifreq`, etc., When using the kernel source code repository of `github.com`, the parameter format can be set to the three-item combination of `owner/repo@branch` , The owner name `owner` in the parameters is a required parameter, the kernel source code repository name `/repo` and the repository branch name `@branch` are optional parameters. When only the owner name `owner` parameter is specified, it will automatically match kernel source code repositories whose owner's name is in `linux-5.x.y` format and branch is `main`. If the repository name or branch name is different, use a combination, such as `owner@branch` or `owner/repo` or `owner/repo@branch` |
 
-- `sudo ./recompile -d -k 5.4.160`: Use the default configuration, and use the `-k` parameter to specify the kernel version to be compiled, and use `_` to link when multiple versions are compiled at the same time.
-- `sudo ./recompile -d -k 5.4.160 -a true`: Use the default configuration, and use the `-a` parameter to set whether to automatically upgrade to the latest kernel of the same series when compiling the kernel.
-- `sudo ./recompile -d -k 5.4.160 -n leifeng`: Use the default configuration, and use the `-n` parameter to set the kernel custom signature.
-- `sudo ./recompile -d -k 5.4.160 -r kernel.org`: Use the default configuration, and use the `-r` parameter to set the download station of the compiled source code.
-- `sudo ./recompile -d -k 5.10.80_5.4.160 -a true -n leifeng -r kernel.org`: Use the default configuration, and set through multiple parameters.
+- `sudo ./recompile -d`: Use the default configuration to compiled kernel.
+- `sudo ./recompile -d -k 5.4.170`: Use the default configuration, and use the `-k` parameter to specify the kernel version to be compiled, and use `_` to link when multiple versions are compiled at the same time.
+- `sudo ./recompile -d -k 5.4.170 -a true`: Use the default configuration, and use the `-a` parameter to set whether to automatically upgrade to the latest kernel of the same series when compiling the kernel.
+- `sudo ./recompile -d -k 5.4.170 -n -xiaoming`: Use the default configuration, and use the `-n` parameter to set the kernel custom signature.
+- `sudo ./recompile -d -k 5.4.170 -r kernel.org`: Use the default configuration, and set the kernel source code repository through the `-r` parameter.
+- `sudo ./recompile -d -k 5.10.90_5.4.170 -a true -n -xiaoming -r kernel.org`: Use the default configuration, and set through multiple parameters.
 
-💡Tip: You can use the [.config](https://github.com/unifreq/arm64-kernel-configs) template and source code of `flippy` to compile the `latest version` of [5.4](https://github.com/unifreq/linux-5.4.y) / [5.10](https://github.com/unifreq/linux-5.10.y) / [5.12](https://github.com/unifreq/linux-5.12.y) / [5.13](https://github.com/unifreq/linux-5.13.y) / [5.14](https://github.com/unifreq/linux-5.14.y) / [5.15](https://github.com/unifreq/linux-5.15.y). `Other series or historical versions` can be compiled with [kernel.org](https://cdn.kernel.org/pub/linux/kernel/v5.x/).
+💡Tip: Recommended Use the [.config](https://github.com/unifreq/arm64-kernel-configs) template and source code of `unifreq` to compile the `latest version` of [5.4](https://github.com/unifreq/linux-5.4.y) / [5.10](https://github.com/unifreq/linux-5.10.y) / [5.15](https://github.com/unifreq/linux-5.15.y), etc. `Other series or historical versions` can be compiled with [kernel.org](https://cdn.kernel.org/pub/linux/kernel/v5.x/). You can also use other kernel source code repositories.
 
 - ### Local compilation
 
-1. Please install the Armbian system in your box and install the following dependent environment.
+1. Install the necessary packages (The script has only been tested on Ubuntu-20.04-x86_64)
 
 ```yaml
 sudo apt-get update -y
 sudo apt-get full-upgrade -y
-sudo apt-get install -y $(curl -fsSL git.io/armbian-kernel-server)
+sudo apt-get install -y $(curl -fsSL git.io/ubuntu-2004-server)
 ```
 
 2. Clone the repository to local: `git clone --depth 1 https://github.com/ophub/amlogic-s9xxx-armbian.git`
 
-3. First create a `kernle` directory under the `~/amlogic-s9xxx-armbian/compile-kernel` directory to store the compiled kernel source code. For example, use the source code of [kernel.org](https://cdn.kernel.org/pub/linux/kernel/v5.x/) to compile, Please download the corresponding kernel such as `linux-5.4.160.tar.xz` and unzip it to the `compile-kernel/kernle/linux-5.4.160` corresponding directory; If you use the source code of [flippy](https://github.com/unifreq) to compile, Please clone the source code of the specified kernel series such as `git clone --depth 1 https://github.com/unifreq/linux-5.4.y compile-kernel/kernle/linux-5.4.y` to the corresponding directory. After completion, enter the corresponding kernel such as `compile-kernel/kernle/linux-5.4.160` directory, Copy the [.config](tools/config) template of the corresponding kernel series to the current kernel directory (For example, copy the config-5.4.160 file and rename it to `.config`), Then run the personalized configuration selection command `make menuconfig` to Make a custom selection, save it after completion, A custom kernel `.config` configuration file will be generated in the kernel directory.
-
-4. Enter the root directory of `~/amlogic-s9xxx-armbian`, and then run `sudo ./recompile -d -k 5.4.160 -r flippy -a false` and other specified parameter commands to compile the kernel. The packaged kernel file is stored in the `compile-kernel/output` directory.
+3. Enter the root directory of `~/amlogic-s9xxx-armbian`, and then run `sudo ./recompile -d -k 5.4.170` and other specified parameter commands to compile the kernel. The script will automatically download and install the compilation environment and kernel source code and make all settings. The packaged kernel file is stored in the `compile-kernel/output` directory. You can upload these kernel files to any directory of `Armbian` system, such as `/opt/5.4.170` directory, and execute the `armbian-update` command in this kernel directory to install the kernel.
 
 - ### Compile with GitHub Action
 
@@ -44,15 +43,39 @@ sudo apt-get install -y $(curl -fsSL git.io/armbian-kernel-server)
 
 2. Select ***`Compile Armbian For Amlogic`*** on the [Action](https://github.com/ophub/amlogic-s9xxx-armbian/actions) page. Click the ***`Run workflow`*** button.
 
-## Other instructions
+- ### Only import GitHub Action to compile the kernel
 
-1. Priority of kernel compilation file inspection: If there is a folder of the specified kernel in the `compile-kernel/kernle` directory, such as `linux-5.4.160`, the local source code will be used for compilation; when there is no specified kernel folder, but there is a compressed file of the specified kernel, such as linux -5.4.160.tar.xz, it will be automatically decompressed and compiled; when no kernel is specified locally, it will be automatically downloaded and compiled from the server.
+You can call the kernel compilation script of this repository through Actions in your github.com repository to make a personalized kernel. For details, see Using Templates [compile-kernel.yml](https://github.com/ophub/amlogic-s9xxx-openwrt/blob/main/.github/workflows/compile-kernel.yml). The code is as follows:
 
-2. If there is no [.config](tools/config) file in the local kernel directory such as `compile-kernel/kernle/linux-5.4.160`, the file will be automatically copied from template.
+```yaml
+- name: Compile the kernel for Amlogic s9xxx
+  uses: ophub/amlogic-s9xxx-armbian@main
+  with:
+    build_target: kernel
+    kernel_version: 5.10.90_5.4.170
+    kernel_auto: true
+    kernel_sign: -meson64-dev
+```
 
-3. Currently, compiling the kernel under the `Armbian` system is the best choice, and it is highly recommended. When compiling the kernel under the `x86_64` environment, the Armbian system will be automatically downloaded, and the `uInitrd` file will be generated through chroot. After the kernel is compiled, it will be automatically packaged into 6 kernel files according to the organization of the kernel files shared by flippy and stored in the `compile-kernel/output` directory. These kernel files will be automatically cleared from the system compiled with the current kernel. If you want to install on the current Armbian system, you can enter the corresponding kernel directory such as `compile-kernel/output/5.4.160` and execute the `armbian-update` command to install the kernel. The `headers` files in the kernel is installed in the `/use/local/include` directory.
+- GitHub Action Input parameter description
 
-4. If a kernel with the same name such as `5.4.160-meson64-beta` is already installed in the current `Armbian` system, the compilation will automatically stop, because the local kernel file with the same name will be deleted during packaging, which will cause the system to crash.
+The relevant parameters correspond to the `local compilation commands`, please refer to the above description.
 
-5. During the kernel test, please test on the `USB/TF` device, and don't write to the `EMMC` partition rashly to avoid bricking; Please do not perform a custom kernel test before you have mastered the method of system recovery proficiently; Please do not test the custom kernel in a formal production environment.
+| Parameter | Defaults | Description |
+| ---- | ---- | ---- |
+| build_target   | kernel   | Fixed parameter `kernel`, set the compilation target to the kernel. |
+| kernel_repo    | unifreq  | Specifies the source code repository for the compiled kernel. The default is `unifreq` . Function reference `-r` |
+| kernel_version | 5.10.90_5.4.170 | Specify [kernel](https://cdn.kernel.org/pub/linux/kernel/v5.x/) name, such as `5.4.170`. Function reference `-k` |
+| kernel_auto | true | Set whether to automatically adopt the latest kernel version of the same series. The default value is `true`. Function reference `-a` |
+| kernel_sign | -meson64-dev | Set the kernel custom signature. The default is `-meson64-dev`. Function reference `-n` |
+| kernel_config | null | The default uses the configuration templates in the [compile-kernel/tools/config](tools/config) directory. You can set the directory where the compiled kernel configuration files are stored in your repository, such as `kernel/config_path` . The kernel configuration templates of each series stored in this directory must start with the name of `config-5.x`. For example, templates for compiling `5.4` series kernels can be named with various names starting with `config-5.4`, such as `config-5.4`, `config-5.4.174` or `config-5.4.174-xiaoming`, etc., When there are multiple files starting with `config-5.4`, the file with the highest version number will be used. Default: `compile-kernel/tools/config` |
+
+- GitHub Action Output variable description
+
+| Parameter                         | For example              | Description                       |
+|-----------------------------------|--------------------------|-----------------------------------|
+| ${{ env.PACKAGED_OUTPUTTAGS }}    | 5.10.90_5.4.170          | The name of the compiled kernel   |
+| ${{ env.PACKAGED_OUTPUTPATH }}    | compile-kernel/output    | kernel files storage path         |
+| ${{ env.PACKAGED_OUTPUTDATE }}    | 2021.04.13.1058          | compile date                      |
+| ${{ env.PACKAGED_STATUS }}        | success                  | Compile status. success / failure |
 

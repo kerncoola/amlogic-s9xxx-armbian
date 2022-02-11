@@ -15,8 +15,6 @@ on:
         default: ""
 
 env:
-  UPLOAD_FIRMWARE: false
-  UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
 
 jobs:
@@ -45,7 +43,7 @@ jobs:
           armbian_url="${{ github.event.inputs.armbian_url }}"
           if  [[ -z "${armbian_url}" ]]; then
               armbian_site="https://armbian.tnahosting.net/dl/lepotato/archive/"
-              armbian_name="Armbian.*bullseye.*.img.xz"
+              armbian_name="Armbian.*focal.*.img.xz"
               armbian_file=$(curl -s "${armbian_site}" | grep -oE "${armbian_name}" | head -n 1)
               if [ -n "${armbian_file}" ]; then
                   armbian_url="${armbian_site}/${armbian_file}"
@@ -55,7 +53,7 @@ jobs:
               fi
           fi
           echo "ARMBIAN_URL=${armbian_url}" >> $GITHUB_ENV
-          echo "COMPILE_STARTINGTIME=$(date +"%Y.%m.%d.%H%M")" >> $GITHUB_ENV
+          echo "COMPILE_STARTINGTIME=$(date +"%m.%d.%H%M")" >> $GITHUB_ENV
 
           # Get the release name of the rebuild armbian file
           set_release="_"
@@ -74,19 +72,13 @@ jobs:
         uses: ophub/amlogic-s9xxx-armbian@main
         with:
           armbian_path: ${{ env.ARMBIAN_URL }}
-          armbian_soc: s905d_s905x3
-          armbian_kernel: 5.10.80_5.4.160
-
-      - name: Upload Armbian image to Actions
-        uses: kittaakos/upload-artifact-as-is@master
-        if: env.PACKAGED_STATUS == 'success' && env.UPLOAD_FIRMWARE == 'true' && !cancelled()
-        with:
-          path: ${{ env.PACKAGED_OUTPUTPATH }}/
+          armbian_soc: s905x3_s905d
+          armbian_kernel: 5.4.170_5.10.90
 
       - name: Upload Armbian image to Release
         id: release
         uses: ncipollo/release-action@v1
-        if: env.PACKAGED_STATUS == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+        if: env.PACKAGED_STATUS == 'success' && !cancelled()
         with:
           tag: Armbian_Aml${{ env.ARMBIAN_RELEASE }}${{ env.PACKAGED_OUTPUTDATE }}
           artifacts: ${{ env.PACKAGED_OUTPUTPATH }}/*

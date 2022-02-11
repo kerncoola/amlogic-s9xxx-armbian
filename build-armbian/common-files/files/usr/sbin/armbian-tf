@@ -1,5 +1,12 @@
 #!/bin/bash
 #=========================================================================
+# This file is licensed under the terms of the GNU General Public
+# License version 2. This program is licensed "as is" without any
+# warranty of any kind, whether express or implied.
+#
+# This file is a part of the Armbian Rebuild and kernel Recompile script
+# https://github.com/ophub/amlogic-s9xxx-armbian
+#
 # Function: Create TF/USB remaining space partition
 # Copyright (C) 2021 https://github.com/unifreq/openwrt_packit
 # Copyright (C) 2021 https://github.com/ophub/amlogic-s9xxx-armbian
@@ -8,11 +15,11 @@
 #=========================================================================
 
 # Set font color
-blue_font_prefix="\033[34m"
-purple_font_prefix="\033[35m"
-green_font_prefix="\033[32m"
-yellow_font_prefix="\033[33m"
-red_font_prefix="\033[31m"
+blue_font_prefix="\033[94m"
+purple_font_prefix="\033[95m"
+green_font_prefix="\033[92m"
+yellow_font_prefix="\033[93m"
+red_font_prefix="\033[91m"
 font_color_suffix="\033[0m"
 INFO="[${blue_font_prefix}INFO${font_color_suffix}]"
 STEPS="[${purple_font_prefix}STEPS${font_color_suffix}]"
@@ -84,7 +91,7 @@ EOF
 
     echo -e "${STEPS} Create shared filesystem ... "
     mkdir -p /mnt/${PT_PRE}3 && sync
-    mkfs.ext4 -F -L "${LB_PRE}SHARED" "/dev/${PT_PRE}3"
+    mkfs.ext4 -F -p -L "${LB_PRE}SHARED" "/dev/${PT_PRE}3"
     mount -t ext4 "/dev/${PT_PRE}3" "/mnt/${PT_PRE}3"
     echo "/dev/${PT_PRE}3 /mnt/${PT_PRE}3 ext4 defaults 0 0" >>/etc/fstab
     sync
